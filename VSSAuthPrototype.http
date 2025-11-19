@@ -1,0 +1,6 @@
+@VSSAuthPrototype_HostAddress = http://localhost:5150
+
+GET {{VSSAuthPrototype_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
