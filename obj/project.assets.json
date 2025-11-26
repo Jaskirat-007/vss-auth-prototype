@@ -44,6 +44,22 @@
           }
         }
       },
+      "Clerk.Net/1.15.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Kiota.Bundle": "1.17.4"
+        },
+        "compile": {
+          "lib/net8.0/Clerk.Net.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Clerk.Net.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.0": {
         "type": "package",
         "dependencies": {
@@ -188,6 +204,123 @@
           }
         }
       },
+      "Microsoft.Kiota.Abstractions/1.17.4": {
+        "type": "package",
+        "dependencies": {
+          "Std.UriTemplate": "2.0.5"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Kiota.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Kiota.Bundle/1.17.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.17.4",
+          "Microsoft.Kiota.Http.HttpClientLibrary": "1.17.4",
+          "Microsoft.Kiota.Serialization.Form": "1.17.4",
+          "Microsoft.Kiota.Serialization.Json": "1.17.4",
+          "Microsoft.Kiota.Serialization.Multipart": "1.17.4",
+          "Microsoft.Kiota.Serialization.Text": "1.17.4"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Kiota.Bundle.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Bundle.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Kiota.Http.HttpClientLibrary/1.17.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.17.4"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Kiota.Http.HttpClientLibrary.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Http.HttpClientLibrary.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Form/1.17.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.17.4"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Form.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Form.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Json/1.17.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.17.4"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Multipart/1.17.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.17.4"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Multipart.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Multipart.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.Kiota.Serialization.Text/1.17.4": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Kiota.Abstractions": "1.17.4"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Text.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Kiota.Serialization.Text.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Microsoft.OpenApi/1.6.14": {
         "type": "package",
         "compile": {
@@ -199,6 +332,15 @@
           "lib/netstandard2.0/Microsoft.OpenApi.dll": {
             "related": ".pdb;.xml"
           }
+        }
+      },
+      "Std.UriTemplate/2.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Std.UriTemplate.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Std.UriTemplate.dll": {}
         }
       },
       "Swashbuckle.AspNetCore/6.6.2": {
@@ -368,6 +510,26 @@
         "lib/netstandard2.1/BCrypt.Net-Next.dll",
         "lib/netstandard2.1/BCrypt.Net-Next.xml",
         "readme.md"
+      ]
+    },
+    "Clerk.Net/1.15.0": {
+      "sha512": "nLl1EuxJcIsbH9DOZR8e3mxbea8Y0k5YM1Inr+pAOiMi/PRAD44o81eYiDZXor0KDyQWU9j7OtVCdVVmeupj+A==",
+      "type": "package",
+      "path": "clerk.net/1.15.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "clerk.net.1.15.0.nupkg.sha512",
+        "clerk.net.nuspec",
+        "lib/net6.0/Clerk.Net.dll",
+        "lib/net6.0/Clerk.Net.xml",
+        "lib/net8.0/Clerk.Net.dll",
+        "lib/net8.0/Clerk.Net.xml",
+        "lib/net9.0/Clerk.Net.dll",
+        "lib/net9.0/Clerk.Net.xml",
+        "lib/netstandard2.0/Clerk.Net.dll",
+        "lib/netstandard2.0/Clerk.Net.xml"
       ]
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/8.0.0": {
@@ -769,6 +931,164 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
+    "Microsoft.Kiota.Abstractions/1.17.4": {
+      "sha512": "AOOWOOXX9Ut6o6zhRGvvpQ/59D5RD4iiSss+JsKgMCLDObM7s7X6lPBHSj311vRuKcHtmeHKvurLxYL/DWQsSA==",
+      "type": "package",
+      "path": "microsoft.kiota.abstractions/1.17.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Microsoft.Kiota.Abstractions.dll",
+        "lib/net5.0/Microsoft.Kiota.Abstractions.xml",
+        "lib/net6.0/Microsoft.Kiota.Abstractions.dll",
+        "lib/net6.0/Microsoft.Kiota.Abstractions.xml",
+        "lib/net8.0/Microsoft.Kiota.Abstractions.dll",
+        "lib/net8.0/Microsoft.Kiota.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Kiota.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Kiota.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Kiota.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Kiota.Abstractions.xml",
+        "microsoft.kiota.abstractions.1.17.4.nupkg.sha512",
+        "microsoft.kiota.abstractions.nuspec"
+      ]
+    },
+    "Microsoft.Kiota.Bundle/1.17.4": {
+      "sha512": "x4zZLC2i2H9g/9bipAU/0uSYad85SpJBk7X2yKO48OpT2G0gx+WZcDOMrTTDAYiJxu3h7fSOM+foC9tp6i2YIA==",
+      "type": "package",
+      "path": "microsoft.kiota.bundle/1.17.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Microsoft.Kiota.Bundle.dll",
+        "lib/net5.0/Microsoft.Kiota.Bundle.xml",
+        "lib/net6.0/Microsoft.Kiota.Bundle.dll",
+        "lib/net6.0/Microsoft.Kiota.Bundle.xml",
+        "lib/net8.0/Microsoft.Kiota.Bundle.dll",
+        "lib/net8.0/Microsoft.Kiota.Bundle.xml",
+        "lib/netstandard2.0/Microsoft.Kiota.Bundle.dll",
+        "lib/netstandard2.0/Microsoft.Kiota.Bundle.xml",
+        "lib/netstandard2.1/Microsoft.Kiota.Bundle.dll",
+        "lib/netstandard2.1/Microsoft.Kiota.Bundle.xml",
+        "microsoft.kiota.bundle.1.17.4.nupkg.sha512",
+        "microsoft.kiota.bundle.nuspec"
+      ]
+    },
+    "Microsoft.Kiota.Http.HttpClientLibrary/1.17.4": {
+      "sha512": "msSSDg5LiuPhQTiw5lwDnFO5i3bEBovRto+/XOCHBgn2rfSNF+QrR1NQAbun86YS5+0jid1UVTKVNoJ9DT37Ag==",
+      "type": "package",
+      "path": "microsoft.kiota.http.httpclientlibrary/1.17.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net462/Microsoft.Kiota.Http.HttpClientLibrary.dll",
+        "lib/net462/Microsoft.Kiota.Http.HttpClientLibrary.xml",
+        "lib/net5.0/Microsoft.Kiota.Http.HttpClientLibrary.dll",
+        "lib/net5.0/Microsoft.Kiota.Http.HttpClientLibrary.xml",
+        "lib/net6.0/Microsoft.Kiota.Http.HttpClientLibrary.dll",
+        "lib/net6.0/Microsoft.Kiota.Http.HttpClientLibrary.xml",
+        "lib/net8.0-browser1.0/Microsoft.Kiota.Http.HttpClientLibrary.dll",
+        "lib/net8.0-browser1.0/Microsoft.Kiota.Http.HttpClientLibrary.xml",
+        "lib/net8.0/Microsoft.Kiota.Http.HttpClientLibrary.dll",
+        "lib/net8.0/Microsoft.Kiota.Http.HttpClientLibrary.xml",
+        "lib/netstandard2.0/Microsoft.Kiota.Http.HttpClientLibrary.dll",
+        "lib/netstandard2.0/Microsoft.Kiota.Http.HttpClientLibrary.xml",
+        "lib/netstandard2.1/Microsoft.Kiota.Http.HttpClientLibrary.dll",
+        "lib/netstandard2.1/Microsoft.Kiota.Http.HttpClientLibrary.xml",
+        "microsoft.kiota.http.httpclientlibrary.1.17.4.nupkg.sha512",
+        "microsoft.kiota.http.httpclientlibrary.nuspec"
+      ]
+    },
+    "Microsoft.Kiota.Serialization.Form/1.17.4": {
+      "sha512": "tbmbxPihes7hcAXDgAC3gwDhPbwWrakjKlXT26w+Zav+mNDS/H4cFkMAIQp4KqEDUwvPbpGB8caDcmV/68r2pQ==",
+      "type": "package",
+      "path": "microsoft.kiota.serialization.form/1.17.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Form.dll",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Form.xml",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Form.dll",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Form.xml",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Form.dll",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Form.xml",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Form.dll",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Form.xml",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Form.dll",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Form.xml",
+        "microsoft.kiota.serialization.form.1.17.4.nupkg.sha512",
+        "microsoft.kiota.serialization.form.nuspec"
+      ]
+    },
+    "Microsoft.Kiota.Serialization.Json/1.17.4": {
+      "sha512": "SKNy75CPRaKGqvJzYDvCPeA0XWxULO/rnomRRkVjNYKQBSc7JeYdFET21Vj7acnAYTcvFLuOjbx9e6EdzxvZhQ==",
+      "type": "package",
+      "path": "microsoft.kiota.serialization.json/1.17.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Json.dll",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Json.xml",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Json.dll",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Json.xml",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Json.dll",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Json.xml",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Json.dll",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Json.xml",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Json.dll",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Json.xml",
+        "microsoft.kiota.serialization.json.1.17.4.nupkg.sha512",
+        "microsoft.kiota.serialization.json.nuspec"
+      ]
+    },
+    "Microsoft.Kiota.Serialization.Multipart/1.17.4": {
+      "sha512": "ht4ZnBWd4IO/8gwO/XXiUIBcH0hpt0+3fZUlpOeAGSGwU0orICARDAE6K3p/xIFcdQx64MkqiobyGSOrgKJN6w==",
+      "type": "package",
+      "path": "microsoft.kiota.serialization.multipart/1.17.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Multipart.dll",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Multipart.xml",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Multipart.dll",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Multipart.xml",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Multipart.dll",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Multipart.xml",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Multipart.dll",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Multipart.xml",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Multipart.dll",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Multipart.xml",
+        "microsoft.kiota.serialization.multipart.1.17.4.nupkg.sha512",
+        "microsoft.kiota.serialization.multipart.nuspec"
+      ]
+    },
+    "Microsoft.Kiota.Serialization.Text/1.17.4": {
+      "sha512": "Li2DDCzyt9bs8D0ZCIlwgb0tfFoKoLPkn8zJJndopUDNixfxl+Xp9FBT+dnbyZRYpk6L0j55Vmw16e2j2D0E3w==",
+      "type": "package",
+      "path": "microsoft.kiota.serialization.text/1.17.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Text.dll",
+        "lib/net5.0/Microsoft.Kiota.Serialization.Text.xml",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Text.dll",
+        "lib/net6.0/Microsoft.Kiota.Serialization.Text.xml",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Text.dll",
+        "lib/net8.0/Microsoft.Kiota.Serialization.Text.xml",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Text.dll",
+        "lib/netstandard2.0/Microsoft.Kiota.Serialization.Text.xml",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Text.dll",
+        "lib/netstandard2.1/Microsoft.Kiota.Serialization.Text.xml",
+        "microsoft.kiota.serialization.text.1.17.4.nupkg.sha512",
+        "microsoft.kiota.serialization.text.nuspec"
+      ]
+    },
     "Microsoft.OpenApi/1.6.14": {
       "sha512": "tTaBT8qjk3xINfESyOPE2rIellPvB7qpVqiWiyA/lACVvz+xOGiXhFUfohcx82NLbi5avzLW0lx+s6oAqQijfw==",
       "type": "package",
@@ -782,6 +1102,20 @@
         "lib/netstandard2.0/Microsoft.OpenApi.xml",
         "microsoft.openapi.1.6.14.nupkg.sha512",
         "microsoft.openapi.nuspec"
+      ]
+    },
+    "Std.UriTemplate/2.0.5": {
+      "sha512": "PtqPdWNBObRcDHjyjbgOz2XoCJQaiA+HNDPQve/O7yGCkospfHDCuH9ULVx1msImwHHG+uhpDjiZX7bpLN/cnw==",
+      "type": "package",
+      "path": "std.uritemplate/2.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Readme.md",
+        "lib/net5.0/Std.UriTemplate.dll",
+        "lib/netstandard2.0/Std.UriTemplate.dll",
+        "std.uritemplate.2.0.5.nupkg.sha512",
+        "std.uritemplate.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore/6.6.2": {
@@ -914,6 +1248,7 @@
     "net8.0": [
       "AWSSDK.S3 >= 4.0.11.3",
       "BCrypt.Net-Next >= 4.0.3",
+      "Clerk.Net >= 1.15.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.0",
       "Microsoft.AspNetCore.OpenApi >= 8.0.11",
       "Swashbuckle.AspNetCore >= 6.6.2",
@@ -978,6 +1313,10 @@
           "BCrypt.Net-Next": {
             "target": "Package",
             "version": "[4.0.3, )"
+          },
+          "Clerk.Net": {
+            "target": "Package",
+            "version": "[1.15.0, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VSSAuthPrototype")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3469f086602504c92d4214113febcb043ac8a99")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1a45e774238bbf799ae3cd596d5684bab5685525")]
 [assembly: System.Reflection.AssemblyProductAttribute("VSSAuthPrototype")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VSSAuthPrototype")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

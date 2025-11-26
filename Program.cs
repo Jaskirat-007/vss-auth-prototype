@@ -9,6 +9,7 @@ builder.Services.AddSwaggerGen();
 
 // Register our custom services
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
