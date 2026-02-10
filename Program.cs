@@ -1,6 +1,9 @@
 using VSSAuthPrototype.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+var clerkAuthority = builder.Configuration["CLERK_AUTHORITY"];
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -10,6 +13,24 @@ builder.Services.AddSwaggerGen();
 // Register our custom services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpClient();
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = clerkAuthority;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.FromMinutes(2)
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -21,6 +42,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Map controllers (this makes our AuthController work)
 app.MapControllers();
