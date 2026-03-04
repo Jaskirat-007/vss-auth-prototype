@@ -3,19 +3,16 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using VSSAuthPrototype.Models;
-using VSSAuthPrototype.Models.DTOs;
 
 namespace VSSAuthPrototype.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
-        // private readonly IUserRepository _userRepository; // We will add this later
 
-        public AuthService(IConfiguration configuration /*, IUserRepository userRepository */)
+        public AuthService(IConfiguration configuration)
         {
             _configuration = configuration;
-            // _userRepository = userRepository; // Add this later
         }
 
         public string GenerateVssToken(User user)
@@ -23,15 +20,18 @@ namespace VSSAuthPrototype.Services
             var secret = _configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
             var permissions = GetPermissionsBySubscription(user.SubscriptionPlan, user.Role);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("username", user.Username ?? ""),
-                new Claim("role", user.Role),
-                new Claim("subscriptionPlan", user.SubscriptionPlan),
+                // ✅ Your model uses Id (not UserId)
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+                // ✅ Your model uses UserName (not Username)
+                new Claim("username", user.UserName ?? ""),
+                new Claim("role", user.Role ?? "viewer"),
+                new Claim("subscriptionPlan", user.SubscriptionPlan ?? "basic"),
                 new Claim("permissions", string.Join(",", permissions)),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -40,8 +40,9 @@ namespace VSSAuthPrototype.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:AccessTokenExpirationMinutes"])),
-                signingCredentials: credentials);
+                expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "15")),
+                signingCredentials: credentials
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -51,17 +52,17 @@ namespace VSSAuthPrototype.Services
             var permissions = new List<string>();
 
             // Assign permissions based on role first
-            if (role.Equals("admin", StringComparison.OrdinalIgnoreCase))
+            if ((role ?? "").Equals("admin", StringComparison.OrdinalIgnoreCase))
             {
                 permissions.AddRange(new[] { "stream:create", "stream:manage", "stream:delete", "user:manage" });
             }
-            else if (role.Equals("sponsor", StringComparison.OrdinalIgnoreCase))
+            else if ((role ?? "").Equals("sponsor", StringComparison.OrdinalIgnoreCase))
             {
                 permissions.AddRange(new[] { "stream:create", "stream:manage" });
             }
 
             // Add viewing permissions based on subscription plan
-            switch (subscriptionPlan?.ToLower())
+            switch ((subscriptionPlan ?? "basic").ToLower())
             {
                 case "premium":
                     permissions.AddRange(new[] { "stream:view:all", "stream:view:premium", "stream:view:free" });
@@ -70,11 +71,11 @@ namespace VSSAuthPrototype.Services
                 case "express":
                     permissions.AddRange(new[] { "stream:view:specific", "stream:view:free" });
                     break;
-                default: // "basic" or null
+                default:
                     permissions.Add("stream:view:free");
                     break;
             }
-            
+
             return permissions.Distinct().ToList();
         }
     }

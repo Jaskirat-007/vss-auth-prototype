@@ -11,7 +11,7 @@ namespace VSSAuthPrototype.Data
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Stream> Streams { get; set; }
+        public DbSet<VssStream> Streams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,7 +27,7 @@ namespace VSSAuthPrototype.Data
             });
 
             // Configure Streams table
-            modelBuilder.Entity<Stream>(entity =>
+            modelBuilder.Entity<VssStream>(entity =>
             {
                 entity.ToTable("Streams");
                 entity.HasKey(e => e.Id);

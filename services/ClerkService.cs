@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using VSSAuthPrototype.Models;
+using System.Text.Json.Serialization;
 
 namespace VSSAuthPrototype.Services
 {
@@ -13,33 +14,31 @@ namespace VSSAuthPrototype.Services
         {
             _configuration = configuration;
             _httpClient = httpClientFactory.CreateClient();
-            
+
             var apiKey = _configuration["Clerk:ApiKey"] ?? throw new InvalidOperationException("Clerk API Key not configured");
+            var domain = _configuration["Clerk:Domain"] ?? throw new InvalidOperationException("Clerk Domain not configured");
+
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-            _httpClient.BaseAddress = new Uri(_configuration["Clerk:Domain"] ?? throw new InvalidOperationException("Clerk Domain not configured"));
+            _httpClient.BaseAddress = new Uri(domain);
         }
 
         public async Task<User?> VerifyClerkTokenAsync(string clerkToken)
         {
             try
             {
-                // Verify the Clerk session token
+                // NOTE: This assumes clerkToken is a Clerk session id.
+                // If clerkToken is actually a JWT, you should verify JWT instead.
                 var response = await _httpClient.GetAsync($"/v1/sessions/{clerkToken}");
-                
+
                 if (!response.IsSuccessStatusCode)
-                {
                     return null;
-                }
 
                 var sessionJson = await response.Content.ReadAsStringAsync();
                 var session = JsonSerializer.Deserialize<ClerkSession>(sessionJson);
-                
-                if (session?.UserId == null)
-                {
-                    return null;
-                }
 
-                // Get full user details from Clerk
+                if (string.IsNullOrWhiteSpace(session?.UserId))
+                    return null;
+
                 return await GetUserFromClerkAsync(session.UserId);
             }
             catch
@@ -53,30 +52,30 @@ namespace VSSAuthPrototype.Services
             try
             {
                 var response = await _httpClient.GetAsync($"/v1/users/{clerkUserId}");
-                
+
                 if (!response.IsSuccessStatusCode)
-                {
                     return null;
-                }
 
                 var userJson = await response.Content.ReadAsStringAsync();
                 var clerkUser = JsonSerializer.Deserialize<ClerkUser>(userJson);
-                
+
                 if (clerkUser == null)
-                {
                     return null;
-                }
+
+                // Clerk typically returns a list of email addresses
+                var primaryEmail =
+                    clerkUser.EmailAddresses?.FirstOrDefault()?.EmailAddress
+                    ?? "";
 
                 // Map Clerk user to VSS user model
                 var user = new User
                 {
-                    Id = Guid.NewGuid(), // Generate new ID or use existing from database
-                    Email = clerkUser.EmailAddresses?.FirstOrDefault()?.EmailAddress ?? "",
+                    Id = Guid.NewGuid(), // you can later map this to a DB user row
+                    Email = primaryEmail,
                     UserName = clerkUser.Username ?? clerkUser.FirstName ?? "user",
                     Role = clerkUser.PublicMetadata?.Role ?? "viewer",
                     SubscriptionPlan = clerkUser.PublicMetadata?.SubscriptionPlan ?? "basic",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow
+                    IsActive = true
                 };
 
                 return user;
@@ -99,13 +98,15 @@ namespace VSSAuthPrototype.Services
             public string? Username { get; set; }
             public string? FirstName { get; set; }
             public string? LastName { get; set; }
-            public List<EmailAddress>? EmailAddresses { get; set; }
+            public List<EmailAddressDto>? EmailAddresses { get; set; }
             public ClerkMetadata? PublicMetadata { get; set; }
         }
 
-        private class EmailAddress
+        
+        private class EmailAddressDto
         {
-            public string? EmailAddress { get; set; }
+            [JsonPropertyName("email_address")]
+            public string EmailAddress { get; set; } = string.Empty;
         }
 
         private class ClerkMetadata

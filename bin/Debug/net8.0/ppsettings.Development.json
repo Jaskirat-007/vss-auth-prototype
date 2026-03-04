@@ -1,0 +1,8 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=YOUR_AZURE_SERVER.database.windows.net;Database=YOUR_DATABASE_NAME;User Id=YOUR_USERNAME;Password=YOUR_PASSWORD;"
+  },
+  "Clerk": {
+    "ApiKey": "sk_test_CP72jqr2WaYfqJxMSF2nHISO1nFgoRBcqWzFXIHLap"
+  }
+}

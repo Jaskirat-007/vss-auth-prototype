@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace VSSAuthPrototype.Models
 {
     [Table("Streams")]
-    public class Stream
+    public class VssStream
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();

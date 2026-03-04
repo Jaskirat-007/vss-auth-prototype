@@ -4,10 +4,10 @@ namespace VSSAuthPrototype.Repositories
 {
     public interface IStreamRepository
     {
-        Task<Stream?> GetByIdAsync(Guid id);
-        Task<Stream?> GetBySlugAsync(string slug);
-        Task<List<Stream>> GetAllActiveStreamsAsync();
-        Task<Stream> CreateAsync(Stream stream);
-        Task<Stream> UpdateAsync(Stream stream);
+        Task<List<VssStream>> GetAllAsync();
+        Task<VssStream?> GetByIdAsync(Guid id);
+        Task<VssStream> CreateAsync(VssStream stream);
+        Task<VssStream> UpdateAsync(VssStream stream);
+        Task<bool> DeleteAsync(Guid id);
     }
 }
