@@ -1,31 +1,45 @@
+using VSSAuthPrototype.Data;
+using VSSAuthPrototype.Repositories;
 using VSSAuthPrototype.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var clerkAuthority = builder.Configuration["CLERK_AUTHORITY"];
 
-// Add services to the container.
+// ───── Services ─────
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
 });
 
+// ───── Database ─────
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register our custom services
+// ───── Repositories ─────
+builder.Services.AddScoped<IStreamRepository, StreamRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// ───── Application Services ─────
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IClerkService, ClerkService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddHttpClient();
 
+// ───── Authentication (Clerk JWKS) ─────
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -46,7 +60,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ───── Pipeline ─────
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -57,8 +71,6 @@ app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Map controllers (this makes our AuthController work)
 app.MapControllers();
 
 app.Run();

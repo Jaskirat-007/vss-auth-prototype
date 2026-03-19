@@ -9,6 +9,7 @@ namespace VSSAuthPrototype.Models.DTOs
         public bool IsLocked { get; set; }
         public string? RequiredSubscription { get; set; }
         public string? LockedReason { get; set; }
+        public string? ThumbnailUrl { get; set; }
     }
 
     public class StreamListResponse
@@ -27,6 +28,8 @@ namespace VSSAuthPrototype.Models.DTOs
         public DateTime? ScheduledStart { get; set; }
         public bool HasAccess { get; set; }
         public string? StreamUrl { get; set; }
+        public string? VodUrl { get; set; }
+        public string? ThumbnailUrl { get; set; }
         public string? RequiredSubscription { get; set; }
     }
 }

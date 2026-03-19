@@ -6,6 +6,7 @@ namespace VSSAuthPrototype.Repositories
     {
         Task<List<VssStream>> GetAllAsync();
         Task<VssStream?> GetByIdAsync(Guid id);
+        Task<VssStream?> GetBySlugAsync(string slug);
         Task<VssStream> CreateAsync(VssStream stream);
         Task<VssStream> UpdateAsync(VssStream stream);
         Task<bool> DeleteAsync(Guid id);
