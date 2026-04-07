@@ -17,10 +17,10 @@ namespace VSSAuthPrototype.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure Users table
+            // Configure Users table (PostgreSQL uses lowercase by default)
             modelBuilder.Entity<User>(entity =>
             {
-                entity.ToTable("AbpUsers");
+                entity.ToTable("users");
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => e.Email).IsUnique();
                 entity.HasIndex(e => e.UserName).IsUnique();
@@ -29,7 +29,7 @@ namespace VSSAuthPrototype.Data
             // Configure Streams table
             modelBuilder.Entity<VssStream>(entity =>
             {
-                entity.ToTable("Streams");
+                entity.ToTable("streams");
                 entity.HasKey(e => e.Id);
                 entity.HasIndex(e => e.Slug).IsUnique();
             });

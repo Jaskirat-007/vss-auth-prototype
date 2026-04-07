@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=YOUR_AZURE_SERVER.database.windows.net;Database=YOUR_DATABASE_NAME;User Id=YOUR_USERNAME;Password=YOUR_PASSWORD;"
+    "DefaultConnection": "Host=db.crtzjjfexagykriaetpt.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=Varsity2026$$;SSL Mode=Require;Trust Server Certificate=true"
   },
   "Clerk": {
     "ApiKey": "sk_test_CP72jqr2WaYfqJxMSF2nHISO1nFgoRBcqWzFXIHLap"
