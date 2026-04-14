@@ -128,3 +128,7 @@ C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\obj\Debug\net8
 C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\obj\Debug\net8.0\ref\VSSAuthPrototype.dll
 C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\bin\Debug\net8.0\Npgsql.dll
 C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\bin\Debug\net8.0\Stripe.net.dll
+C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\bin\Debug\net8.0\System.Configuration.ConfigurationManager.dll
+C:\Users\jaski\OneDrive\Desktop\CAPSTONE\backend\VSSAuthPrototype\bin\Debug\net8.0\System.Security.Cryptography.ProtectedData.dll
