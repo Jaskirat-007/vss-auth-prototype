@@ -1,8 +1,0 @@
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Host=db.crtzjjfexagykriaetpt.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=Varsity2026$$;SSL Mode=Require;Trust Server Certificate=true"
-  },
-  "Clerk": {
-    "ApiKey": "sk_test_CP72jqr2WaYfqJxMSF2nHISO1nFgoRBcqWzFXIHLap"
-  }
-}
