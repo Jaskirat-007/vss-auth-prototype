@@ -1,35 +1,39 @@
 namespace VSSAuthPrototype.Models.DTOs
 {
-    public class StreamAccessResponse
+    // ── Matches frontend StreamTeam interface ──
+    public class StreamTeamDto
     {
-        public Guid StreamId { get; set; }
-        public required string Title { get; set; }
-        public required string Slug { get; set; }
-        public bool HasAccess { get; set; }
-        public bool IsLocked { get; set; }
-        public string? RequiredSubscription { get; set; }
-        public string? LockedReason { get; set; }
-        public string? ThumbnailUrl { get; set; }
+        public required string Name { get; set; }
+        public required string ShortName { get; set; }
+        public string? Logo { get; set; }
     }
 
+    // ── Matches frontend Stream interface exactly ──
+    // Used by: GET /api/stream/my-streams (list), GET /api/stream/{slug} (detail)
+    public class StreamDto
+    {
+        public required string Id { get; set; }
+        public required string Slug { get; set; }
+        public required string Title { get; set; }
+        public required string League { get; set; }
+        public required StreamTeamDto Home { get; set; }
+        public required StreamTeamDto Away { get; set; }
+        public string? Location { get; set; }
+        public required string StartAt { get; set; }          // ISO string
+        public required string Status { get; set; }           // "live", "upcoming", "past"
+        public required string Access { get; set; }           // "free", "ppv", "subscriber"
+        public decimal? PriceUSD { get; set; }
+        public string? ThumbnailUrl { get; set; }
+        public string? DacastIframeSrc { get; set; }
+        public string? DacastChannelId { get; set; }
+        public required string CreatedAt { get; set; }
+        public required string UpdatedAt { get; set; }
+    }
+
+    // ── List response wrapper ──
     public class StreamListResponse
     {
-        public required List<StreamAccessResponse> Streams { get; set; }
+        public required List<StreamDto> Streams { get; set; }
         public required string UserSubscription { get; set; }
-    }
-
-    public class StreamDetailResponse
-    {
-        public Guid StreamId { get; set; }
-        public required string Title { get; set; }
-        public string? Description { get; set; }
-        public required string Slug { get; set; }
-        public bool IsLive { get; set; }
-        public DateTime? ScheduledStart { get; set; }
-        public bool HasAccess { get; set; }
-        public string? StreamUrl { get; set; }
-        public string? VodUrl { get; set; }
-        public string? ThumbnailUrl { get; set; }
-        public string? RequiredSubscription { get; set; }
     }
 }
