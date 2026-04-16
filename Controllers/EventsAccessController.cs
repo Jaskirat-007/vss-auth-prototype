@@ -19,10 +19,6 @@ namespace VSSAuthPrototype.Controllers
             _storageService = storageService;
         }
 
-        /// <summary>
-        /// GET /api/events/{id}/access
-        /// Returns stream in frontend format with access info.
-        /// </summary>
         [RequireAuth]
         [HttpGet("{id:guid}/access")]
         public async Task<IActionResult> GetEventAccess([FromRoute] Guid id)
@@ -48,7 +44,6 @@ namespace VSSAuthPrototype.Controllers
                 (stream.RequiredSubscription.ToLower() == "express" && perms.Contains("stream:view:specific")) ||
                 (stream.RequiredSubscription.ToLower() == "premium" && perms.Contains("stream:view:premium"));
 
-            // Build the stream DTO
             var status = stream.IsLive ? "live"
                 : (stream.ScheduledStart.HasValue && stream.ScheduledStart > DateTime.UtcNow ? "upcoming" : "past");
 
@@ -58,19 +53,8 @@ namespace VSSAuthPrototype.Controllers
                 Slug = stream.Slug,
                 Title = stream.Title,
                 League = stream.League ?? "Sports",
-                Home = new StreamTeamDto
-                {
-                    Name = stream.HomeTeamName ?? "Home",
-                    ShortName = stream.HomeTeamShort ?? "HME",
-                    Logo = stream.HomeTeamLogo
-                },
-                Away = new StreamTeamDto
-                {
-                    Name = stream.AwayTeamName ?? "Away",
-                    ShortName = stream.AwayTeamShort ?? "AWY",
-                    Logo = stream.AwayTeamLogo
-                },
-                Location = stream.Location,
+                SchoolA = stream.HomeTeamName ?? "Home",
+                SchoolB = stream.AwayTeamName ?? "Away",
                 StartAt = (stream.ScheduledStart ?? stream.CreatedAt).ToUniversalTime().ToString("o"),
                 Status = status,
                 Access = stream.Access,
@@ -93,7 +77,6 @@ namespace VSSAuthPrototype.Controllers
                 });
             }
 
-            // For VOD, try B2 signed URL
             if (!stream.IsLive && string.IsNullOrEmpty(dto.DacastIframeSrc))
             {
                 var vodKey = $"livestreams/{stream.Slug}.mp4";
@@ -104,11 +87,7 @@ namespace VSSAuthPrototype.Controllers
                     dto.DacastIframeSrc = vodUrl;
             }
 
-            return Ok(new
-            {
-                allowed = true,
-                stream = dto
-            });
+            return Ok(new { allowed = true, stream = dto });
         }
     }
 }

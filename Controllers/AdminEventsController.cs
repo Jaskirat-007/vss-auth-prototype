@@ -21,27 +21,18 @@ namespace VSSAuthPrototype.Controllers
             string Title,
             string Slug,
             string League,
-            string HomeTeamName,
-            string HomeTeamShort,
-            string AwayTeamName,
-            string AwayTeamShort,
-            string Access = "free",                 // "free", "ppv", "subscriber"
+            string SchoolA,
+            string SchoolB,
+            string Access = "free",
             decimal? PriceUSD = null,
-            string RequiredSubscription = "basic",  // "basic", "express", "premium"
+            string RequiredSubscription = "basic",
             string? Description = null,
-            string? Location = null,
-            string? HomeTeamLogo = null,
-            string? AwayTeamLogo = null,
             string? ThumbnailUrl = null,
             string? DacastIframeSrc = null,
             string? DacastStreamId = null,
             DateTime? ScheduledStart = null
         );
 
-        /// <summary>
-        /// POST /api/admin/events
-        /// Admin creates a new event. Returns the created stream in frontend Stream format.
-        /// </summary>
         [RequireAuth]
         [RequirePermission("events:write")]
         [HttpPost]
@@ -56,13 +47,10 @@ namespace VSSAuthPrototype.Controllers
                 Slug = req.Slug,
                 Description = req.Description,
                 League = req.League,
-                HomeTeamName = req.HomeTeamName,
-                HomeTeamShort = req.HomeTeamShort,
-                HomeTeamLogo = req.HomeTeamLogo,
-                AwayTeamName = req.AwayTeamName,
-                AwayTeamShort = req.AwayTeamShort,
-                AwayTeamLogo = req.AwayTeamLogo,
-                Location = req.Location,
+                HomeTeamName = req.SchoolA,
+                HomeTeamShort = req.SchoolA.Length >= 3 ? req.SchoolA[..3].ToUpper() : req.SchoolA.ToUpper(),
+                AwayTeamName = req.SchoolB,
+                AwayTeamShort = req.SchoolB.Length >= 3 ? req.SchoolB[..3].ToUpper() : req.SchoolB.ToUpper(),
                 Access = req.Access,
                 PriceUSD = req.PriceUSD,
                 RequiredSubscription = req.RequiredSubscription,
@@ -75,26 +63,14 @@ namespace VSSAuthPrototype.Controllers
 
             var created = await _streamRepo.CreateAsync(stream);
 
-            // Return in frontend Stream format
             var dto = new StreamDto
             {
                 Id = created.Id.ToString(),
                 Slug = created.Slug,
                 Title = created.Title,
                 League = created.League ?? "Sports",
-                Home = new StreamTeamDto
-                {
-                    Name = created.HomeTeamName ?? "Home",
-                    ShortName = created.HomeTeamShort ?? "HME",
-                    Logo = created.HomeTeamLogo
-                },
-                Away = new StreamTeamDto
-                {
-                    Name = created.AwayTeamName ?? "Away",
-                    ShortName = created.AwayTeamShort ?? "AWY",
-                    Logo = created.AwayTeamLogo
-                },
-                Location = created.Location,
+                SchoolA = created.HomeTeamName ?? "Home",
+                SchoolB = created.AwayTeamName ?? "Away",
                 StartAt = (created.ScheduledStart ?? created.CreatedAt).ToUniversalTime().ToString("o"),
                 Status = created.ScheduledStart.HasValue && created.ScheduledStart > DateTime.UtcNow ? "upcoming" : "live",
                 Access = created.Access,
@@ -113,10 +89,6 @@ namespace VSSAuthPrototype.Controllers
             });
         }
 
-        /// <summary>
-        /// GET /api/admin/events
-        /// Admin lists all events in frontend Stream format.
-        /// </summary>
         [RequireAuth]
         [RequireAdmin]
         [HttpGet]
@@ -130,19 +102,8 @@ namespace VSSAuthPrototype.Controllers
                 Slug = s.Slug,
                 Title = s.Title,
                 League = s.League ?? "Sports",
-                Home = new StreamTeamDto
-                {
-                    Name = s.HomeTeamName ?? "Home",
-                    ShortName = s.HomeTeamShort ?? "HME",
-                    Logo = s.HomeTeamLogo
-                },
-                Away = new StreamTeamDto
-                {
-                    Name = s.AwayTeamName ?? "Away",
-                    ShortName = s.AwayTeamShort ?? "AWY",
-                    Logo = s.AwayTeamLogo
-                },
-                Location = s.Location,
+                SchoolA = s.HomeTeamName ?? "Home",
+                SchoolB = s.AwayTeamName ?? "Away",
                 StartAt = (s.ScheduledStart ?? s.CreatedAt).ToUniversalTime().ToString("o"),
                 Status = s.IsLive ? "live" : (s.ScheduledStart.HasValue && s.ScheduledStart > DateTime.UtcNow ? "upcoming" : "past"),
                 Access = s.Access,
@@ -154,24 +115,16 @@ namespace VSSAuthPrototype.Controllers
                 UpdatedAt = (s.UpdatedAt ?? s.CreatedAt).ToUniversalTime().ToString("o")
             }).ToList();
 
-            return Ok(new
-            {
-                total = dtos.Count,
-                streams = dtos
-            });
+            return Ok(new { total = dtos.Count, streams = dtos });
         }
 
-        /// <summary>
-        /// PUT /api/admin/events/{id}/go-live
-        /// </summary>
         [RequireAuth]
         [RequireAdmin]
         [HttpPut("{id:guid}/go-live")]
         public async Task<IActionResult> GoLive([FromRoute] Guid id)
         {
             var stream = await _streamRepo.GetByIdAsync(id);
-            if (stream == null)
-                return NotFound(new { error = "Event not found" });
+            if (stream == null) return NotFound(new { error = "Event not found" });
 
             stream.IsLive = true;
             stream.ActualStart = DateTime.UtcNow;
@@ -180,17 +133,13 @@ namespace VSSAuthPrototype.Controllers
             return Ok(new { message = "Event is now LIVE.", eventId = id, isLive = true, actualStart = stream.ActualStart });
         }
 
-        /// <summary>
-        /// PUT /api/admin/events/{id}/end
-        /// </summary>
         [RequireAuth]
         [RequireAdmin]
         [HttpPut("{id:guid}/end")]
         public async Task<IActionResult> EndEvent([FromRoute] Guid id)
         {
             var stream = await _streamRepo.GetByIdAsync(id);
-            if (stream == null)
-                return NotFound(new { error = "Event not found" });
+            if (stream == null) return NotFound(new { error = "Event not found" });
 
             stream.IsLive = false;
             stream.ActualEnd = DateTime.UtcNow;
@@ -199,17 +148,13 @@ namespace VSSAuthPrototype.Controllers
             return Ok(new { message = "Event ended. Available as VOD.", eventId = id, isLive = false, actualEnd = stream.ActualEnd });
         }
 
-        /// <summary>
-        /// DELETE /api/admin/events/{id}
-        /// </summary>
         [RequireAuth]
         [RequireAdmin]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteEvent([FromRoute] Guid id)
         {
             var deleted = await _streamRepo.DeleteAsync(id);
-            if (!deleted)
-                return NotFound(new { error = "Event not found" });
+            if (!deleted) return NotFound(new { error = "Event not found" });
 
             return Ok(new { message = "Event deleted.", eventId = id });
         }

@@ -25,10 +25,6 @@ namespace VSSAuthPrototype.Controllers
             _storageService = storageService;
         }
 
-        /// <summary>
-        /// GET /api/stream/my-streams
-        /// Returns all streams in the exact format the frontend Stream type expects.
-        /// </summary>
         [HttpGet("my-streams")]
         [RequireAuth]
         public async Task<IActionResult> GetMyStreams()
@@ -48,11 +44,6 @@ namespace VSSAuthPrototype.Controllers
             });
         }
 
-        /// <summary>
-        /// GET /api/stream/{slug}
-        /// Returns a single stream in the frontend Stream format.
-        /// If user doesn't have access, still returns stream data but without dacastIframeSrc.
-        /// </summary>
         [HttpGet("{slug}")]
         [RequireAuth]
         public async Task<IActionResult> GetStreamBySlug(string slug)
@@ -70,7 +61,6 @@ namespace VSSAuthPrototype.Controllers
 
             var dto = MapToStreamDto(stream, permissions, role);
 
-            // If no access, strip the streaming URL but still return the stream info
             if (!hasAccess)
             {
                 dto.DacastIframeSrc = null;
@@ -87,15 +77,12 @@ namespace VSSAuthPrototype.Controllers
                 });
             }
 
-            // If VOD (not live), try to get signed B2 URL
             if (!stream.IsLive && string.IsNullOrEmpty(dto.DacastIframeSrc))
             {
                 var vodKey = $"livestreams/{stream.Slug}.mp4";
                 var vodUrl = await _storageService.GetSignedUrlAsync(vodKey);
                 if (string.IsNullOrEmpty(vodUrl))
                     vodUrl = await _storageService.GetVideoUrlByFilenameAsync($"{stream.Slug}.mp4");
-                
-                // Store VOD URL in the iframe field so frontend can use it
                 if (!string.IsNullOrEmpty(vodUrl))
                     dto.DacastIframeSrc = vodUrl;
             }
@@ -103,10 +90,6 @@ namespace VSSAuthPrototype.Controllers
             return Ok(dto);
         }
 
-        /// <summary>
-        /// GET /api/stream/{slug}/access-check
-        /// Quick boolean check — does the user have access?
-        /// </summary>
         [HttpGet("{slug}/access-check")]
         [RequireAuth]
         public async Task<IActionResult> CheckStreamAccess(string slug)
@@ -132,7 +115,6 @@ namespace VSSAuthPrototype.Controllers
             });
         }
 
-        // ── Helper: Map VssStream DB model → frontend StreamDto ──
         private StreamDto MapToStreamDto(VssStream s, List<string> permissions, string role)
         {
             var status = ComputeStatus(s);
@@ -144,45 +126,30 @@ namespace VSSAuthPrototype.Controllers
                 Slug = s.Slug,
                 Title = s.Title,
                 League = s.League ?? "Sports",
-                Home = new StreamTeamDto
-                {
-                    Name = s.HomeTeamName ?? "Home",
-                    ShortName = s.HomeTeamShort ?? (s.HomeTeamName?.Length >= 3 ? s.HomeTeamName[..3].ToUpper() : "HME"),
-                    Logo = s.HomeTeamLogo
-                },
-                Away = new StreamTeamDto
-                {
-                    Name = s.AwayTeamName ?? "Away",
-                    ShortName = s.AwayTeamShort ?? (s.AwayTeamName?.Length >= 3 ? s.AwayTeamName[..3].ToUpper() : "AWY"),
-                    Logo = s.AwayTeamLogo
-                },
-                Location = s.Location,
+                SchoolA = s.HomeTeamName ?? "Home",
+                SchoolB = s.AwayTeamName ?? "Away",
                 StartAt = (s.ScheduledStart ?? s.CreatedAt).ToUniversalTime().ToString("o"),
                 Status = status,
-                Access = hasAccess ? s.Access : s.Access, // always return the access type
+                Access = s.Access,
                 PriceUSD = s.PriceUSD,
                 ThumbnailUrl = s.ThumbnailUrl,
-                DacastIframeSrc = hasAccess ? s.DacastIframeSrc : null, // only return if user has access
+                DacastIframeSrc = hasAccess ? s.DacastIframeSrc : null,
                 DacastChannelId = hasAccess ? s.DacastStreamId : null,
                 CreatedAt = s.CreatedAt.ToUniversalTime().ToString("o"),
                 UpdatedAt = (s.UpdatedAt ?? s.CreatedAt).ToUniversalTime().ToString("o")
             };
         }
 
-        // ── Helper: Compute status from stream data (matches frontend logic) ──
         private string ComputeStatus(VssStream s)
         {
             if (s.IsLive) return "live";
-
             var now = DateTime.UtcNow;
             var start = s.ScheduledStart ?? s.CreatedAt;
-
             if (now < start) return "upcoming";
             if ((now - start).TotalHours > 4) return "past";
-            return "live"; // started within last 4 hours = live
+            return "live";
         }
 
-        // ── Helper: Check access based on permissions ──
         private bool CanAccessStream(List<string> permissions, string requiredSubscription, string role)
         {
             if (role.Equals("admin", StringComparison.OrdinalIgnoreCase)) return true;
