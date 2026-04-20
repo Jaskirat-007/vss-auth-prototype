@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins("http://localhost:3000", "https://varsity-sports-show.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
@@ -83,23 +83,18 @@ builder.Services
     {
         options.ForwardDefaultSelector = context =>
         {
-            // Check the Authorization header for a Bearer token
             var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
             if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-                return "Clerk"; // default to Clerk
+                return "Clerk";
 
             var token = authHeader["Bearer ".Length..].Trim();
 
-            // Local JWTs start with eyJ and contain our issuer
-            // Clerk JWTs also start with eyJ but have a different issuer
-            // Try to peek at the token to determine which scheme to use
             try
             {
                 var parts = token.Split('.');
                 if (parts.Length == 3)
                 {
                     var payload = parts[1];
-                    // Add padding if needed
                     payload = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
                     var json = Encoding.UTF8.GetString(Convert.FromBase64String(payload));
 
@@ -109,7 +104,6 @@ builder.Services
             }
             catch
             {
-                // If we can't parse, default to Clerk
             }
 
             return "Clerk";
