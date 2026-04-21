@@ -1,3 +1,5 @@
+//stripe
+
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
