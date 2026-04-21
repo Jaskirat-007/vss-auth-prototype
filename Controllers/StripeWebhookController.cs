@@ -20,11 +20,6 @@ namespace VSSAuthPrototype.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        /// <summary>
-        /// POST /api/stripe/webhook
-        /// Stripe sends checkout.session.completed here after a successful payment.
-        /// We read the price ID, map it to a subscription tier, and update Clerk metadata.
-        /// </summary>
         [HttpPost("webhook")]
         public async Task<IActionResult> HandleWebhook()
         {
@@ -36,19 +31,18 @@ namespace VSSAuthPrototype.Controllers
 
             try
             {
-                // If webhook secret is configured, verify the signature
                 if (!string.IsNullOrEmpty(webhookSecret))
                 {
                     stripeEvent = EventUtility.ConstructEvent(
                         json,
                         Request.Headers["Stripe-Signature"],
-                        webhookSecret
+                        webhookSecret,
+                        throwOnApiVersionMismatch: false
                     );
                 }
                 else
                 {
-                    // For local testing without CLI, parse without verification
-                    stripeEvent = EventUtility.ParseEvent(json);
+                    stripeEvent = EventUtility.ParseEvent(json, throwOnApiVersionMismatch: false);
                 }
             }
             catch (StripeException e)
@@ -57,7 +51,6 @@ namespace VSSAuthPrototype.Controllers
                 return BadRequest(new { error = "Invalid signature" });
             }
 
-            // Handle the checkout.session.completed event
             if (stripeEvent.Type == "checkout.session.completed")
             {
                 var session = stripeEvent.Data.Object as Session;
@@ -67,7 +60,6 @@ namespace VSSAuthPrototype.Controllers
 
                 Console.WriteLine($"Checkout completed for customer: {session.CustomerEmail}");
 
-                // Get the line items to find which price/product was purchased
                 var service = new SessionService();
                 StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
 
@@ -80,23 +72,19 @@ namespace VSSAuthPrototype.Controllers
                     return Ok();
                 }
 
-                // Map price ID to subscription tier
                 var tier = MapPriceToTier(priceId);
                 Console.WriteLine($"Price {priceId} mapped to tier: {tier}");
 
-                // Get Clerk user ID from session metadata or customer email
                 var clerkUserId = session.Metadata?.GetValueOrDefault("clerk_user_id");
                 var customerEmail = session.CustomerEmail ?? session.CustomerDetails?.Email;
 
                 if (!string.IsNullOrEmpty(clerkUserId))
                 {
-                    // Update Clerk user metadata with new subscription plan
                     await UpdateClerkUserMetadata(clerkUserId, tier);
                     Console.WriteLine($"Updated Clerk user {clerkUserId} to {tier}");
                 }
                 else if (!string.IsNullOrEmpty(customerEmail))
                 {
-                    // Find user by email and update
                     var userId = await FindClerkUserByEmail(customerEmail);
                     if (userId != null)
                     {
@@ -117,17 +105,11 @@ namespace VSSAuthPrototype.Controllers
             return Ok();
         }
 
-        /// <summary>
-        /// POST /api/stripe/create-portal-session
-        /// Creates a Stripe Customer Portal session so users can manage their subscription.
-        /// Frontend calls this from openBillingPortal().
-        /// </summary>
         [HttpPost("create-portal-session")]
         public async Task<IActionResult> CreatePortalSession()
         {
             StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
 
-            // Get the user's email from their Clerk JWT claims
             var email = User.Claims.FirstOrDefault(c => c.Type == "email")?.Value;
 
             if (string.IsNullOrEmpty(email))
@@ -135,7 +117,6 @@ namespace VSSAuthPrototype.Controllers
                 return BadRequest(new { error = "No email found in auth token" });
             }
 
-            // Find the Stripe customer by email
             var customerService = new CustomerService();
             var customers = await customerService.ListAsync(new CustomerListOptions
             {
@@ -150,7 +131,6 @@ namespace VSSAuthPrototype.Controllers
                 return BadRequest(new { error = "No Stripe customer found for this email. Subscribe first." });
             }
 
-            // Create a portal session
             var portalService = new Stripe.BillingPortal.SessionService();
             var portalSession = await portalService.CreateAsync(new Stripe.BillingPortal.SessionCreateOptions
             {
@@ -161,10 +141,6 @@ namespace VSSAuthPrototype.Controllers
             return Ok(new { url = portalSession.Url });
         }
 
-        /// <summary>
-        /// Maps a Stripe price ID to a VSS subscription tier.
-        /// Add more mappings here if you add tiers later.
-        /// </summary>
         private string MapPriceToTier(string priceId)
         {
             var premiumPriceId = _configuration["Stripe:PremiumPriceId"];
@@ -172,14 +148,9 @@ namespace VSSAuthPrototype.Controllers
             if (priceId == premiumPriceId)
                 return "premium";
 
-            // Default fallback — any paid product = premium for now
             return "premium";
         }
 
-        /// <summary>
-        /// Updates a Clerk user's public metadata with the new subscription plan.
-        /// Uses the Clerk Backend API.
-        /// </summary>
         private async Task UpdateClerkUserMetadata(string clerkUserId, string subscriptionPlan)
         {
             var clerkApiKey = _configuration["Clerk:ApiKey"];
@@ -219,10 +190,6 @@ namespace VSSAuthPrototype.Controllers
             }
         }
 
-        /// <summary>
-        /// Finds a Clerk user by email address.
-        /// Returns the Clerk user ID if found, null otherwise.
-        /// </summary>
         private async Task<string?> FindClerkUserByEmail(string email)
         {
             var clerkApiKey = _configuration["Clerk:ApiKey"];
