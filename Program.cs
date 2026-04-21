@@ -22,7 +22,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://varsity-sports-show.vercel.app")
+        policy.WithOrigins("http://localhost:3000", "https://varsity-sports-show.vercel.app", "https://varsity-sports-show-8f26.vercel.app")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
